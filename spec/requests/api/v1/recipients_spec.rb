@@ -1,6 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::RecipientsController, type: :request do
+  let(:user) { create(:user) }
+  sign_in(:user)
+
   let!(:recipient) { create(:recipient) }
   let(:school) { recipient.school }
 

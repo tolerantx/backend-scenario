@@ -1,6 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::SchoolsController, type: :request do
+  let(:user) { create(:user) }
+  sign_in(:user)
+
   describe 'POST #create' do
     it 'creates a School' do
       expect do

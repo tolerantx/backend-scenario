@@ -1,6 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::OrdersController, type: :request do
+  let(:user) { create(:user) }
+  sign_in(:user)
+
   let(:school) { create(:school) }
   let(:recipient) { create(:recipient, school: school) }
   let(:order) { create(:order, school: school) }
