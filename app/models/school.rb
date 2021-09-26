@@ -8,8 +8,7 @@ class School < ApplicationRecord
     orders.where(date: date)
   end
 
-  def ordered_gifts_on(date)
-    gift_count = orders_on(date).map(&:gift_count).reduce(:+)
-    gift_count.nil? ? 0 : gift_count
+  def ordered_gifts_count_on(date)
+    orders_on(date).sum(&:gift_count).to_i
   end
 end

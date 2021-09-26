@@ -30,7 +30,7 @@ RSpec.describe School, type: :model do
     end
 
     it 'Counts the number of gifts order for a given date' do
-      expect(@school.ordered_gifts_on(@order.date)).to eq 16
+      expect(@school.ordered_gifts_count_on(@order.date)).to eq 16
     end
   end
 end

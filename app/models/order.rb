@@ -13,16 +13,15 @@ class Order < ApplicationRecord
 
   before_save :flag_if_status_changed_to_shipped
 
-  enum status: {
-    ORDER_RECEIVED: 1, ORDER_PROCESSING: 2, ORDER_SHIPPED: 3, ORDER_CANCELLED: 4
-  }
+  STATUSES = { ORDER_RECEIVED: 1, ORDER_PROCESSING: 2, ORDER_SHIPPED: 3, ORDER_CANCELLED: 4 }.freeze
+  enum status: STATUSES
 
   def gift_count
-    items.map(&:quantity).reduce(:+)
+    items.sum(:quantity)
   end
 
   def recipient_id_list
-    items.map(&:recipient_id).uniq
+    items.pluck(:recipient_id).uniq
   end
 
   def recipient_count
@@ -32,19 +31,17 @@ class Order < ApplicationRecord
   private
 
   def flag_if_status_changed_to_shipped
-    old_status = attribute_in_database('status')
-    flag_for_notification if status == 'ORDER_SHIPPED' && old_status != 'ORDER_SHIPPED'
+    flag_for_notification if status == 'ORDER_SHIPPED' && status_was != 'ORDER_SHIPPED'
   end
 
   def order_not_shipped_or_cancelled
-    old_status = attribute_in_database('status')
-    return unless %w[ORDER_SHIPPED ORDER_CANCELLED].include? old_status
+    return unless %w[ORDER_SHIPPED ORDER_CANCELLED].include? status_was
 
-    errors.add('Status:', "Can't modify order in #{old_status} status")
+    errors.add(:status, "Can't modify order in #{status_was} status")
   end
 
   def correct_order_flow
-    old_status = Order.statuses[attribute_in_database('status')]
+    old_status = Order.statuses[status_was]
     new_status = Order.statuses[status]
     return if ORDER_CANCELLED? || new_status == old_status + 1 || new_status == old_status
 
