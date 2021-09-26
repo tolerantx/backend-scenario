@@ -39,9 +39,9 @@ class Api::V1::RecipientsController < ApplicationController
 
   def recipient
     @recipient ||= if  params[:id]
-                     Recipient.find_by!(id: params[:id])
+                     school.recipients.find_by!(id: params[:id])
                    else
-                     Recipient.new(recipient_params.merge(school_id: school.id))
+                     school.recipients.new(recipient_params.merge(school_id: school.id))
                    end
   end
 

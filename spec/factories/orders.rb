@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :order do
-    # status {  }
+    school
     date { Date.today }
   end
 end

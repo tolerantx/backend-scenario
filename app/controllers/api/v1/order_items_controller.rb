@@ -4,11 +4,19 @@ class Api::V1::OrderItemsController < ApplicationController
   end
 
   def create
-    render status: :created if item.save!
+    if item.save
+      render status: :created
+    else
+      render status: :unprocessable_entity
+    end
   end
 
   def update
-    render status: :accepted if item.update!(order_item_params)
+    if item.update!(order_item_params)
+      render status: :ok
+    else
+      render status: :unprocessable_entity
+    end
   end
 
   private
@@ -23,9 +31,9 @@ class Api::V1::OrderItemsController < ApplicationController
 
   def item
     @item ||= if params[:id]
-                OrderItem.find_by!(id: params[:id])
+                order.items.find_by!(id: params[:id])
               else
-                OrderItem.new(order_item_params.merge(order_id: order.id))
+                order.items.new(order_item_params.merge(order_id: order.id))
               end
   end
 

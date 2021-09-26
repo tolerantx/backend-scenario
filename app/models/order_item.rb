@@ -16,7 +16,7 @@ class OrderItem < ApplicationRecord
   private
 
   def within_daily_gift_limit
-    return unless (already_ordered + quantity) > MAX_GIFTS_PER_DAY
+    return unless (already_ordered + quantity.to_i) > MAX_GIFTS_PER_DAY
 
     errors.add('Gift Count:', "Daily gift limit exceeded, Max: #{MAX_GIFTS_PER_DAY}")
   end
