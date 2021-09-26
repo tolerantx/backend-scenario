@@ -1,4 +1,4 @@
-class Api::V1::RecipientsController < ApplicationController
+class Api::V1::RecipientsController < Api::V1::ApplicationController
   def index
     render json: school_recipients
   end
